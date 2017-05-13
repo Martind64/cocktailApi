@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function(){
 	Route::resource('cocktail', 'CocktailController');
+	Route::resource('category', 'CategoryController');
 });
 

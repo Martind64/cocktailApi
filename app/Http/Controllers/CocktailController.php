@@ -16,12 +16,14 @@ class CocktailController extends Controller
      */
     public function index()
     {
+        // Get all data from the cocktail table
         $cocktail = Cocktail::all();
 
+        // Create a json response with cocktail and status code
         $response = Response::json($cocktail, 200);
 
+        // Return response
         return $response;
-
     }
 
     /**
@@ -63,6 +65,11 @@ class CocktailController extends Controller
         // Save the cocktail to the database
         $cocktail->save();
 
+        // Create a response using the response class
+        $response = Response::json([
+            'message' => 'The cocktail '.$cocktail->cocktail_name.' has been created'], 200);
+
+        return $response;
     }
 
     /**
@@ -76,7 +83,7 @@ class CocktailController extends Controller
         // Find a cocktail on id
         $cocktail = Cocktail::find($id);
 
-        // If the cocktail doesn't exist, return a not found response
+        // If the cocktail doesn't exist, return a "not found" response
         if (!$cocktail) {
             $response = Response::json([
                 'error' => [
@@ -130,6 +137,7 @@ class CocktailController extends Controller
         $cocktail->img_path = $request->img_path;
         $cocktail->save();
 
+        // Create a response using the response class
         $response = Response::json([
             'message' => 'The cocktail has been updated',
             'data' => $cocktail], 200);
