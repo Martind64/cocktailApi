@@ -80,7 +80,7 @@ class CategoryController extends Controller
         if (!$category) {
             $response = Response::json([
                 'error' => [
-                    'message' => 'This category cannot be found']], 404);
+                    'message' => 'The category cannot be found']], 404);
             return $response;
         }
 

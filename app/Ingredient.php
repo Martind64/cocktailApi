@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Ingredient extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,12 +12,10 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'category_name'
+        'ingredient_name',
     ];
 
     public function cocktails(){
-    	return $this->belongsToMany('App\Cocktail');
+        return $this->belongsToMany('App\Cocktail');
     }
-
-
 }

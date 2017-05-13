@@ -18,5 +18,9 @@ class Cocktail extends Model
     public function categories(){
     	return $this->belongsToMany('App\Category', 'cocktail_category');
     }
+
+    public function ingredients(){
+        return $this->belongsToMany('App\Ingredient', 'cocktail_ingredient');
+    }
 }
  

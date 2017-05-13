@@ -7,6 +7,7 @@ use Response;
 
 use App\Cocktail;
 use App\Category;
+use App\Ingredient;
 
 class CocktailController extends Controller
 {
@@ -17,8 +18,8 @@ class CocktailController extends Controller
      */
     public function index()
     {
-        // Get all data from the cocktail table
-        $cocktail = Cocktail::all();
+        // Get all data about all cocktails
+        $cocktail = Cocktail::with('categories', 'ingredients')->get();
 
         // Create a json response with cocktail and status code
         $response = Response::json($cocktail, 200);
@@ -46,7 +47,7 @@ class CocktailController extends Controller
     public function store(Request $request)
     {
         // If properties are null return a response
-        if((!$request->cocktail_name) || (!$request->recipe) || (!$request->img_path)) {
+        if((!$request->cocktail_name) || (!$request->recipe) || (!$request->img_path) || (!$request->ingredient_id)) {
 
             // Create a response using the response class
             $response = Response::json([
@@ -64,16 +65,19 @@ class CocktailController extends Controller
             'img_path' => $request->img_path]);
 
         // Save the cocktail to the database
-        $cocktail->save();
+        if ($cocktail->save()) {
+            // Send response on success
+            $response = Response::json([
+                'message' => 'The cocktail '.$cocktail->cocktail_name.' has been created'], 200);
+        }
 
         // If Categories has been posted, save them to the DB 
         if ($request->category_id) {
              $cocktail->categories()->attach($request->category_id);
         }
 
-        // Create a response using the response class
-        $response = Response::json([
-            'message' => 'The cocktail '.$cocktail->cocktail_name.' has been created'], 200);
+        // Save the ingredients to the database
+        $cocktail->ingredients()->attach($request->ingredient_id);
 
         return $response;
     }
@@ -87,13 +91,13 @@ class CocktailController extends Controller
     public function show($id)
     {
         // Find a cocktail and it's categories on id
-        $cocktail = Cocktail::find($id)->with('categories')->find($id);
+        $cocktail = Cocktail::find($id)->with('categories','ingredients')->find($id);
 
         // If the cocktail doesn't exist, return a "not found" response
         if (!$cocktail) {
             $response = Response::json([
                 'error' => [
-                    'message' => 'This cocktail cannot be found']], 404);
+                    'message' => 'The cocktail cannot be found']], 404);
            return $response;
         }
 
