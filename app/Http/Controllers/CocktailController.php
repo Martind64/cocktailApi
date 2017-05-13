@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Response;
 
 use App\Cocktail;
+use App\Category;
 
 class CocktailController extends Controller
 {
@@ -65,6 +66,11 @@ class CocktailController extends Controller
         // Save the cocktail to the database
         $cocktail->save();
 
+        // If Categories has been posted, save them to the DB 
+        if ($request->category_id) {
+             $cocktail->categories()->attach($request->category_id);
+        }
+
         // Create a response using the response class
         $response = Response::json([
             'message' => 'The cocktail '.$cocktail->cocktail_name.' has been created'], 200);
@@ -80,8 +86,8 @@ class CocktailController extends Controller
      */
     public function show($id)
     {
-        // Find a cocktail on id
-        $cocktail = Cocktail::find($id);
+        // Find a cocktail and it's categories on id
+        $cocktail = Cocktail::find($id)->with('categories')->find($id);
 
         // If the cocktail doesn't exist, return a "not found" response
         if (!$cocktail) {

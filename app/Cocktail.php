@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cocktail extends Model
 {
-	public $name;
     /**
      * The attributes that are mass assignable.
      *
@@ -16,8 +15,8 @@ class Cocktail extends Model
         'cocktail_name', 'description', 'recipe', 'img_path',
     ];
 
-    public function getName(){
-    	return $this->name;
+    public function categories(){
+    	return $this->belongsToMany('App\Category', 'cocktail_category');
     }
-
 }
+ 

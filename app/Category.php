@@ -12,6 +12,10 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'category_name',
+        'category_name'
     ];
+
+    public function cocktails(){
+    	return $this->belongsToMany('App\Cocktail');
+    }
 }
